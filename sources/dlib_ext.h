@@ -228,10 +228,12 @@ namespace dlib {
 
     namespace tt {
         enum class operation_mode { CHANNEL_WISE = 0, PLANE_WISE = 1 };
+    }
 
+    namespace tttt {
         /* TO BE ADDED TO <tensor_tools.h> */
         // -----------------------------------------------------------------------------------        
-        void embeddings(
+        void e_embeddings(
             resizable_tensor& dest,
             const tensor& src,
             const tensor& embs
@@ -264,7 +266,7 @@ namespace dlib {
                   the corresponding embedding in dest is filled with 1's instead of 0's.
         */
         
-        void embeddings_gradient(
+        void e_embeddings_gradient(
             const tensor& prev,
             const tensor& gradient_input,
             tensor& grads,
@@ -296,7 +298,7 @@ namespace dlib {
                 - The updates to grads are performed atomically to handle concurrent updates to the same embedding.
                 - The function is thread-safe and processes samples in parallel.
         */        
-        void rms_normalize(
+        void e_rms_normalize(
             const double eps,
             resizable_tensor& dest,
             resizable_tensor& scale,
@@ -319,7 +321,7 @@ namespace dlib {
                 where n is the sample index, k is the channel index, and i, j are the spatial indices.
         !*/
         
-        void rms_normalize_gradient(
+        void e_rms_normalize_gradient(
             const tensor& gradient_input,
             const tensor& scale,
             const tensor& src,
@@ -345,7 +347,7 @@ namespace dlib {
                 - #dscale contains the gradients of f() with respect to the RMS values.
         !*/
         
-        void transpose(
+        void e_transpose(
             bool add_to,
             tensor& dest,
             const tensor& src
@@ -688,6 +690,7 @@ namespace dlib {
         }
 
         // -----------------------------------------------------------------------------------        
+/*
         void embeddings(
             resizable_tensor& dest,
             const tensor& src,
@@ -980,6 +983,8 @@ namespace dlib {
                 }
             });
         }        
+*/
+
 
         // -----------------------------------------------------------------------------------
 
@@ -1381,7 +1386,7 @@ namespace dlib {
     }
 #endif
 
-    namespace tt {
+    namespace ttttt {
         /* TO BE ADDED TO <tensor_tools.cpp> */
         // ----------------------------------------------------------------------------------------        
         void embeddings(
@@ -1412,6 +1417,11 @@ namespace dlib {
             cpu::embeddings_gradient(prev, gradient_input, grads, freqs, learning_rate, scale);
 #endif
         }
+
+
+    }
+
+    namespace tt {
 
         void softmax(
             tensor& dest,
@@ -1544,6 +1554,10 @@ namespace dlib {
 #endif        
         }
 
+    }
+
+    namespace ttttt {
+
         // ----------------------------------------------------------------------------------------
 
         void rms_normalize(
@@ -1579,7 +1593,9 @@ namespace dlib {
         }
         
         // ----------------------------------------------------------------------------------------
+    }
 
+    namespace tt {
         void reorg2(
             bool add_to,
             tensor& dest,
@@ -1609,7 +1625,9 @@ namespace dlib {
             cpu::reorg_gradient2(add_to, grad, row_stride, col_stride, gradient_input);
 #endif
         }
+    }
 
+    namespace ttttt {
         // ----------------------------------------------------------------------------------------
         
         void transpose(
@@ -1657,12 +1675,12 @@ namespace dlib {
 
     /* TO BE ADDED TO <layers.h> */
     // ----------------------------------------------------------------------------------------    
-    const double DEFAULT_RMS_NORM_EPS = 1e-5;
+    const double e_DEFAULT_RMS_NORM_EPS = 1e-5;
 
-    class rms_norm_
+    class e_rms_norm_
     {
     public:
-        explicit rms_norm_(
+        explicit e_rms_norm_(
             double eps_ = DEFAULT_RMS_NORM_EPS
         ) :
             learning_rate_multiplier(1),
@@ -1714,9 +1732,9 @@ namespace dlib {
         const tensor& get_layer_params() const { return params; };
         tensor& get_layer_params() { return params; };
 
-        friend void serialize(const rms_norm_& item, std::ostream& out)
+        friend void serialize(const e_rms_norm_& item, std::ostream& out)
         {
-            serialize("rms_norm_", out);
+            serialize("e_rms_norm_", out);
             serialize(item.params, out);
             serialize(item.gamma, out);
             serialize(item.learning_rate_multiplier, out);
@@ -1726,12 +1744,12 @@ namespace dlib {
             serialize(item.eps, out);
         }
 
-        friend void deserialize(rms_norm_& item, std::istream& in)
+        friend void deserialize(e_rms_norm_& item, std::istream& in)
         {
             std::string version;
             deserialize(version, in);
-            if (version != "rms_norm_")
-                throw serialization_error("Unexpected version '" + version + "' found while deserializing dlib::rms_norm_.");
+            if (version != "e_rms_norm_")
+                throw serialization_error("Unexpected version '" + version + "' found while deserializing dlib::e_rms_norm_.");
             deserialize(item.params, in);
             deserialize(item.gamma, in);
             deserialize(item.learning_rate_multiplier, in);
@@ -1741,9 +1759,9 @@ namespace dlib {
             deserialize(item.eps, in);
         }
 
-        friend std::ostream& operator<<(std::ostream& out, const rms_norm_& item)
+        friend std::ostream& operator<<(std::ostream& out, const e_rms_norm_& item)
         {
-            out << "rms_norm";
+            out << "e_rms_norm";
             out << " (eps=" << item.eps << ")";
             out << " learning_rate_mult=" << item.learning_rate_multiplier;
             out << " weight_decay_mult=" << item.weight_decay_multiplier;
@@ -1752,7 +1770,7 @@ namespace dlib {
             return out;
         }
 
-        friend void to_xml(const rms_norm_& item, std::ostream& out)
+        friend void to_xml(const e_rms_norm_& item, std::ostream& out)
         {
             out << "<rms_norm";
             out << " eps='" << item.eps << "'";
@@ -1778,7 +1796,7 @@ namespace dlib {
     };
 
     template <typename SUBNET>
-    using rms_norm = add_layer<rms_norm_, SUBNET>;    
+    using e_rms_norm = add_layer<e_rms_norm_, SUBNET>;    
 
     // ----------------------------------------------------------------------------------------
 
@@ -1819,7 +1837,7 @@ namespace dlib {
     // ----------------------------------------------------------------------------------------
     /* TO BE ADDED TO <layers_abstract.h> & <layers.h> */    
     template <int DROP_RATE_PERCENT>
-    class dropout_rate_ : public dropout_
+    class e_dropout_rate_ : public dropout_
     {
     public:
         explicit dropout_rate_() : dropout_(static_cast<float>(DROP_RATE_PERCENT) / 100.0f)
@@ -1829,7 +1847,7 @@ namespace dlib {
         }
     };
     template <int DROP_RATE, typename SUBNET>
-    using dropout_rate = add_layer<dropout_rate_<DROP_RATE>, SUBNET>;    
+    using e_dropout_rate = add_layer<e_dropout_rate_<DROP_RATE>, SUBNET>;    
 
     // ----------------------------------------------------------------------------------------
     /* TO BE ADDED TO <layers.h> */    
@@ -1837,13 +1855,13 @@ namespace dlib {
         unsigned long num_embeddings_,
         unsigned long embedding_dim_
     >
-    class embeddings_
+    class e_embeddings_
     {
         static_assert(num_embeddings_ > 0, "The size of the embedding dictionary must be > 0");
         static_assert(embedding_dim_ > 0, "The size of each embedding vector must be > 0");
 
     public:
-        embeddings_() : num_embeddings(num_embeddings_),
+        e_embeddings_() : num_embeddings(num_embeddings_),
             embedding_dim(embedding_dim_),
             learning_rate_multiplier(1.0f),
             scale_by_freq(true)
@@ -1984,19 +2002,19 @@ namespace dlib {
     };
 
     template <unsigned long nb_embeddings, unsigned long embedding_length, typename SUBNET>
-    using embeddings = add_layer<embeddings_<nb_embeddings, embedding_length>, SUBNET>;    
+    using e_embeddings = add_layer<e_embeddings_<nb_embeddings, embedding_length>, SUBNET>;    
     
-    class positional_encodings_ {
+    class e_positional_encodings_ {
     public:
-        positional_encodings_(unsigned long sequence_dim_ = 1, unsigned long embedding_dim_ = 1) :
+        e_positional_encodings_(unsigned long sequence_dim_ = 1, unsigned long embedding_dim_ = 1) :
             sequence_dim(sequence_dim_), embedding_dim(embedding_dim_)
         {
         }
-        positional_encodings_(const positional_encodings_& item) :
+        e_positional_encodings_(const e_positional_encodings_& item) :
             pe(item.pe), sequence_dim(item.sequence_dim), embedding_dim(item.embedding_dim)
         {
         }
-        positional_encodings_& operator= (const positional_encodings_& item)
+        e_positional_encodings_& operator= (const e_positional_encodings_& item)
         {
             if (this == &item) return *this;
             pe = item.pe;
@@ -2056,11 +2074,11 @@ namespace dlib {
         const tensor& get_positional_encodings() const { return pe; }
         tensor& get_positional_encodings() { return pe; }
 
-        friend void serialize(const positional_encodings_& item, std::ostream& out)
+        friend void serialize(const e_positional_encodings_& item, std::ostream& out)
         {
             serialize("positional_encodings_", out);
         }
-        friend void deserialize(positional_encodings_& item, std::istream& in)
+        friend void deserialize(e_positional_encodings_& item, std::istream& in)
         {
             std::string version;
             deserialize(version, in);
@@ -2068,12 +2086,12 @@ namespace dlib {
                 throw serialization_error("Unexpected version '" + version + "' found while deserializing dlib::positional_encodings_.");
         }
 
-        friend std::ostream& operator<<(std::ostream& out, const positional_encodings_& item)
+        friend std::ostream& operator<<(std::ostream& out, const e_positional_encodings_& item)
         {
             out << "positional_encodings";
             return out;
         }
-        friend void to_xml(const positional_encodings_& item, std::ostream& out) {
+        friend void to_xml(const e_positional_encodings_& item, std::ostream& out) {
             out << "<positional_encodings />\n";
         }
 
@@ -2084,20 +2102,20 @@ namespace dlib {
     };
 
     template <typename SUBNET>
-    using positional_encodings = add_layer<positional_encodings_, SUBNET>;    
+    using e_positional_encodings = add_layer<e_positional_encodings_, SUBNET>;    
 
-    enum linear_bias_mode { LINEAR_HAS_BIAS = 0, LINEAR_NO_BIAS = 1 };
+    enum e_linear_bias_mode { e_LINEAR_HAS_BIAS = 0, e_LINEAR_NO_BIAS = 1 };
 
     template <
         unsigned long num_outputs_,
         linear_bias_mode bias_mode_
         >
-    class linear_
+    class e_linear_
     {
         static_assert(num_outputs_ > 0, "The number of outputs from a linear_ layer must be > 0");
 
     public:
-        linear_() :
+        e_linear_() :
             num_outputs(num_outputs_),
             num_inputs(0),
             learning_rate_multiplier(1),
@@ -2266,7 +2284,7 @@ namespace dlib {
         unsigned long num_outputs,
         typename SUBNET
         >
-    using linear = add_layer<linear_<num_outputs, LINEAR_HAS_BIAS>, SUBNET>;
+    using e_linear = add_layer<linear_<num_outputs, LINEAR_HAS_BIAS>, SUBNET>;
 
     template <
         unsigned long num_outputs,
@@ -2399,9 +2417,9 @@ namespace dlib {
     template <typename SUBNET>
     using hstack = add_layer<hstack_, SUBNET>;
     
-    class transpose_ {
+    class e_transpose_ {
     public:
-        transpose_() {}
+        e_transpose_() {}
         template <typename SUBNET> void setup(const SUBNET& sub) {}
 
         template <typename SUBNET> void forward(const SUBNET& sub, resizable_tensor& output) {
@@ -2434,21 +2452,21 @@ namespace dlib {
         const tensor& get_layer_params() const { return params; }
         tensor& get_layer_params() { return params; }
 
-        friend void serialize(const transpose_& item, std::ostream& out) {
+        friend void e_serialize(const transpose_& item, std::ostream& out) {
             serialize("transpose_", out);
         }
-        friend void deserialize(transpose_& item, std::istream& in) {
+        friend void e_deserialize(transpose_& item, std::istream& in) {
             std::string version;
             deserialize(version, in);
             if (version != "transpose_")
                 throw serialization_error("Unexpected version '" + version + "' found while deserializing dlib::transpose_.");
         }
 
-        friend std::ostream& operator<<(std::ostream& out, const transpose_& item) {
+        friend std::ostream& operator<<(std::ostream& out, const e_transpose_& item) {
             out << "transpose";
             return out;
         }
-        friend void to_xml(const transpose_& item, std::ostream& out) {
+        friend void e_to_xml(const e_transpose_& item, std::ostream& out) {
             out << "<transpose />\n";
         }
 
@@ -2456,23 +2474,23 @@ namespace dlib {
         dlib::resizable_tensor params; // unused
     };
 
-    template <typename SUBNET> using transpose = add_layer<transpose_, SUBNET>;    
+    template <typename SUBNET> using e_transpose = add_layer<e_transpose_, SUBNET>;    
     
-    struct neg_infinity_tag {};
-    struct zero_tag {};
+    struct e_neg_infinity_tag {};
+    struct e_zero_tag {};
 
     template<typename T>
-    struct is_special_value : std::false_type {};
+    struct e_is_special_value : std::false_type {};
     template<>
-    struct is_special_value<neg_infinity_tag> : std::true_type {};
+    struct e_is_special_value<e_neg_infinity_tag> : std::true_type {};
     template<>
-    struct is_special_value<zero_tag> : std::true_type {};
+    struct e_is_special_value<e_zero_tag> : std::true_type {};
 
     template<long diag_, typename tag_, long num_ = 0, long den_ = 1>
-    class tril_
+    class e_tril_
     {
     public:
-        tril_() : diag(diag_), diag_value(compute_diag_value()) {}
+        e_tril_() : diag(diag_), diag_value(compute_diag_value()) {}
 
         template <typename SUBNET>
         void setup(const SUBNET& sub)
@@ -2574,23 +2592,23 @@ namespace dlib {
     };
 
     template <typename SUBNET>
-    using tril = add_layer<tril_<0, zero_tag>, SUBNET>;
+    using e_tril = add_layer<e_tril_<0, zero_tag>, SUBNET>;
 
     template <typename SUBNET>
-    using tril_mask = add_layer<tril_<0, neg_infinity_tag>, SUBNET>;
+    using e_tril_mask = add_layer<e_tril_<0, neg_infinity_tag>, SUBNET>;
 
     template <long diag, long num, long den, typename SUBNET>
-    using tril_diag = add_layer<tril_<diag, void, num, den>, SUBNET>;    
+    using e_tril_diag = add_layer<e_tril_<diag, void, num, den>, SUBNET>;    
     
     template <
         template<typename> class tag
     >
-    class multm_prev_
+    class e_multm_prev_
     {
     public:
         const static unsigned long id = tag_id<tag>::id;
 
-        multm_prev_() {}
+        e_multm_prev_() {}
         template <typename SUBNET> void setup(const SUBNET& sub) {}
 
         template <typename SUBNET>
@@ -2733,7 +2751,7 @@ namespace dlib {
     using softmax2 = add_layer<softmax2_<static_cast<unsigned long>(tt::operation_mode::CHANNEL_WISE)>, SUBNET>;
 
     template <typename SUBNET>
-    using softmaxm = add_layer<softmax2_< static_cast<unsigned long>(tt::operation_mode::PLANE_WISE)>, SUBNET>;    
+    using e_softmaxm = add_layer<softmax2_< static_cast<unsigned long>(tt::operation_mode::PLANE_WISE)>, SUBNET>;    
 
 // ----------------------------------------------------------------------------------------
     /* TO BE ADDED TO <loss.h> */ 

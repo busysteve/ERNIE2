@@ -5,7 +5,7 @@ namespace dlib
     namespace cuda
     {
         // ----------------------------------------------------------------------------------------
-
+/*
         __global__ void _cuda_rms_normalize(
             float* dest,
             float* scale,
@@ -199,7 +199,7 @@ namespace dlib
                 dest.k(), dest.nr(), dest.nc(), dest.device(),
                 src.k(), src.nr(), src.nc(), src.device(), add_to);
         }
-           
+  */         
         __global__ void cuda_split_columns(
             size_t size,
             size_t snr,
@@ -376,7 +376,7 @@ namespace dlib
                 gradient_input.k(), gradient_input.nr(), gradient_input.nc(), gradient_input.device(),
                 row_stride, col_stride, add_to);
         }
-
+/*
         __global__ void _cuda_embeddings(size_t dsize, size_t dk, size_t dr, size_t dc,
             float* d, const float* s, const float* e, size_t es
         )
@@ -577,5 +577,7 @@ namespace dlib
             batch_multiply_kernel << <grid, block >> > (out.device(), a.device(), b.device(),
                 a_trans, b_trans, num_samples, num_channels, a_nr, a_nc, b_nr, b_nc, M, N);
         }
+
+	*/
     }
 }

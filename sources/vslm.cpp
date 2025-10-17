@@ -28,8 +28,9 @@
     provides insights into creating custom layers, handling sequential data, and
     implementing attention mechanisms within the dlib framework.
 */
-#include <fstream>
+//#include <fstream>
 #include <string>
+#include <format>
 #include <vector>
 #include <filesystem>
 #include <random>
@@ -37,14 +38,15 @@
 #include <deque>
 #include <regex>
 #include <algorithm>
-#include <io.h>
+//#include <sys/io.h>
 #include <fcntl.h>
 #include <atomic>
 #include <boost/program_options.hpp>
 
-#include "slm_defs.h"
 #include "advanced_tokenizer.hpp"
+#include <fstream>
 #include "data.h"
+#include "slm_defs.h"
 
 #include <sentencepiece_trainer.h>
 #include <sentencepiece_processor.h>
@@ -72,10 +74,10 @@ string vocabulary_prefix = "ernie.en-fr.ung.50k", language_model = "ernie_fp32_v
 std::unique_ptr<advanced_tokenizer> tokenizer_;
 
 void configure_console() {
-    SetConsoleOutputCP(CP_UTF8);
-    int res = _setmode(_fileno(stdout), _O_TEXT);
-    if (res == -1) cerr << "Cannot set mode" << endl;
-    std::cout.imbue(std::locale("en_US.UTF-8"));    
+    //SetConsoleOutputCP(CP_UTF8);
+    //int res = _setmode(_fileno(stdout), _O_TEXT);
+    //if (res == -1) cerr << "Cannot set mode" << endl;
+    //std::cout.imbue(std::locale("en_US.UTF-8"));    
 }
 
 namespace utils {
@@ -465,7 +467,7 @@ public:
             if (value > static_cast<unsigned long>(std::numeric_limits<int>::max()))
                 cerr << "Value too large for 'int' conversion (" << to_string(value) << ")" << endl;
             string result;
-            sp_.Decode({ static_cast<int>(value) }, &result);
+            sp_.Decode(std::vector<int>({ static_cast<int>(value) }), &result);
             return result;
         }
     }

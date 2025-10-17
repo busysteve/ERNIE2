@@ -173,6 +173,7 @@ std::vector<string> raw_data = {
 const string raw_data_test =
 R"(During an international conference on innovative technologies, diverse participants from different cultural backgrounds gathered in small discussion groups. As the facilitator approached one particularly engaged group, she noticed subtle shifts in body language and conversational dynamics. The way people were positioning themselves, their facial micro-expressions, and their turn-taking patterns revealed interesting patterns of )";
 
+/*
 wstring utf8_to_wstr(const string& utf8) {
     wstring_convert<std::codecvt_utf8_utf16<wchar_t>> wcu8;
     return wcu8.from_bytes(utf8);
@@ -186,11 +187,13 @@ string ansi_to_utf8(const string& ansi_str) {
     wstring wide_chars = wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>, wchar_t>{}.from_bytes(ansi_str);
     return converter.to_bytes(wide_chars);
 }
+*/
 
 void write_raw_data(const string& file_path, const std::vector<string>& data = raw_data) {
     ofstream file(file_path, std::ios::binary);
     if (file.is_open()) {
-        for (const auto& document : data) file << ansi_to_utf8(document) << "\n";
+        //for (const auto& document : data) file << ansi_to_utf8(document) << "\n";
+        for (const auto& document : data) file << document << "\n";
         file.close();
         cout << "raw data written to " << file_path << endl;
     } else {

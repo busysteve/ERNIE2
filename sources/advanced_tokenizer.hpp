@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <iostream>
 #include <cstring>
+#include <cstdint>
+
 
 // ----------------------------------------------------------------------------------------
 

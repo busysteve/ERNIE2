@@ -1,0 +1,2 @@
+nvcc -Xcompiler="-fdiagnostics-color=always -Wdeprecated-declarations -fpermissive" -std=c++20 -o vslm ../../../github/Dlib-working2/dlib/all/source.cpp *.cu *.cpp -DDLIB_USE_CUDA -I/home/smathews/github/Dlib-working2 -I/usr/local/include -L/home/smathews/github/Dlib-working2/build/dlib -lcuda -lcublas -lcurand -lcusolver -lcudnn -ldlib -lboost_program_options -lsentencepiece -lsentencepiece_train -lX11 2>&1 | tee out.bld | less -R
+
